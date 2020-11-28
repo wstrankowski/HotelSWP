@@ -1,0 +1,42 @@
+﻿<Window x:Class="GUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GUI"
+        xmlns:viewmodels="clr-namespace:GUI.ViewModels"
+        xmlns:views="clr-namespace:GUI.Views"
+        mc:Ignorable="d" FontSize="22"
+        Title="System rezerwacji hotelowych" Height="450" Width="800">
+    <Window.Resources>
+        <DataTemplate x:Name="datesViewModel" DataType="{x:Type viewmodels:DatesViewModel}">
+            <views:DatesView DataContext="{Binding}"/>
+        </DataTemplate>
+        <DataTemplate x:Name="roomsViewModel" DataType="{x:Type viewmodels:RoomsViewModel}">
+            <views:RoomsView DataContext="{Binding}"/>
+        </DataTemplate>
+        <DataTemplate x:Name="personalInfoViewModel" DataType="{x:Type viewmodels:FinalViewModel}">
+            <views:PersonalInfoView DataContext="{Binding}"/>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Column="0" Content="Cofnij" Click="Previous_Clicked" Grid.ColumnSpan="2" Margin="1,0,263,0"/>
+        <Button Grid.Column="1" Content="Pomoc"/>
+        <Button Grid.Column="2" Content="Dalej" Click="Next_Clicked"/>
+
+        <ContentControl Grid.Row="1" Grid.ColumnSpan="3" 
+                        Content="{Binding}"/>
+        
+        
+    </Grid>
+</Window>
