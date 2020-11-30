@@ -10,8 +10,6 @@ namespace HotelSWP.TTS
 {
     public class RoomsTTS : BaseTTS
     {
-        private RoomsInputOption _inputOption;
-
         public void AskForGuestsNumber()
         {
             ss.SpeakAsync("Proszę podać liczbę gości.");
@@ -31,7 +29,7 @@ namespace HotelSWP.TTS
 
         public override void Help()
         {
-            switch(_inputOption)
+            switch(InputOption)
             {
                 case RoomsInputOption.GUESTS:
                     AskForGuestsNumber();
@@ -49,15 +47,10 @@ namespace HotelSWP.TTS
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("Aby przejść dalej powiedz \"DALEJ\", ");
-            sb.Append("aby zmienić datę przyjazdu powiedz \"zmień datę przyjazdu\", ");
-            sb.Append("aby zmienić datę wyjazdu powiedz \"zmień datę wyjazdu\".");
+            sb.Append("aby zmienić liczbę gości powiedz \"zmień liczbę gości\", ");
+            sb.Append("aby zmienić udogodnienia powiedz \"zmień udogodnienia\".");
             string text = sb.ToString();
             ss.SpeakAsync(text);
-        }
-
-        internal void SetInputOption(RoomsInputOption inputOption)
-        {
-            _inputOption = inputOption;
         }
     }
 }

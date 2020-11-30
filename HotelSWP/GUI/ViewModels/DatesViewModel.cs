@@ -171,11 +171,6 @@ namespace GUI.ViewModels
             }
         }
 
-        private bool IsChangeRequest(string[] words)
-        {
-            return words.Length > 1 && words[0].Equals("zmień") && words[1].Equals("datę");
-        }
-
         public override bool CanChangeView()
         {
             return model.IsCompleted();

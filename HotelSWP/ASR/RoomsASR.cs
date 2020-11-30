@@ -12,12 +12,15 @@ namespace HotelSWP.ASR
         private Grammar guestsNumberGrammar;
         private Grammar conveniencesGrammar;
         private Grammar convStopGrammar;
+        private Grammar changeGrammar;
         readonly string[] numbers = new string[] { "1", "2", "3" };
         readonly string convStop = "Zakończ edycję";
         readonly string[] convOption = new string[] { "Dodaj", "Usuń" };
         public readonly string[] conveniences = new string[] { "Telewizor", "Internet", "Żelazko", "Czajnik", "Suszarka do włosów", "SPA", "Śniadanie" };
+        readonly string change = "zmień";
+        readonly string[] changeOptions = new string[] { "liczbę gości", "udogodnienia" };
 
-        public void GetGuestsNumber()
+        public void AddGuestsNumberGrammar()
         {
             try
             {
@@ -34,7 +37,7 @@ namespace HotelSWP.ASR
             }
         }
 
-        public void GetConveniences()
+        public void AddConveniencesGrammar()
         {
             try
             {
@@ -55,6 +58,16 @@ namespace HotelSWP.ASR
             {
                 Console.WriteLine(e);
             }
+        }
+
+        public void AddChangeGrammar()
+        {
+            Choices choices = GetChoices(changeOptions);
+            GrammarBuilder grammarBuilder = new GrammarBuilder();
+            grammarBuilder.Append(change);
+            grammarBuilder.Append(choices);
+            changeGrammar = new Grammar(grammarBuilder);
+            _sre.LoadGrammarAsync(changeGrammar);
         }
 
         public void UnloadGuestsNumberGrammar()

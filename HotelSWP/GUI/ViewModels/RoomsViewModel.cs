@@ -13,6 +13,8 @@ namespace GUI.ViewModels
 {
     public class RoomsViewModel : BaseViewModel
     {
+        public static RoomsInputOption InputOption = RoomsInputOption.GUESTS;
+
         public enum RoomsInputOption
         {
             GUESTS,
@@ -22,9 +24,12 @@ namespace GUI.ViewModels
 
         private readonly RoomsASR _asr;
         private readonly RoomsTTS _tts;
-        private RoomsInputOption inputOption;
         private readonly RoomsModel model = new RoomsModel();
-        public string GuestsNumber { get
+        private bool isChangeMode;
+
+        public string GuestsNumber
+        {
+            get
             {
                 return model.GuestsNumber.ToString();
             }
@@ -35,7 +40,9 @@ namespace GUI.ViewModels
             }
         }
         private IEnumerable<string> _notSelectedConveniences;
-        public IEnumerable<string> NotSelectedConveniences { get
+        public IEnumerable<string> NotSelectedConveniences
+        {
+            get
             {
                 return _notSelectedConveniences;
             }
@@ -61,7 +68,6 @@ namespace GUI.ViewModels
         {
             _asr = roomsASR;
             _tts = roomsTTS;
-            _tts.SetInputOption(inputOption);
             NotSelectedConveniences = new List<string>(_asr.conveniences);
             SelectedConveniences = new List<string>();
         }
@@ -69,30 +75,55 @@ namespace GUI.ViewModels
         public override void Start()
         {
             base.Start();
-            inputOption = RoomsInputOption.GUESTS;
-            _tts.AskForGuestsNumber();
-            _asr.GetGuestsNumber();
-            while (inputOption == RoomsInputOption.GUESTS) { }
-            _asr.UnloadGuestsNumberGrammar();
-            _tts.AskForConveniences();
-            _asr.GetConveniences();
-            while (inputOption == RoomsInputOption.CONVENIENCES) { }
-            _asr.UnloadConveniencesGrammar();
+            if (InputOption == RoomsInputOption.GUESTS)
+            {
+                GetGuestsNumber();
+                while (InputOption == RoomsInputOption.GUESTS) { }
+                GetConveniences();
+                while (InputOption == RoomsInputOption.CONVENIENCES) { }
+                _asr.AddChangeGrammar();
+            }
             _tts.Finished();
+        }
+
+        private void GetConveniences()
+        {
+            _tts.AskForConveniences();
+            _asr.AddConveniencesGrammar();
+        }
+
+        private void GetGuestsNumber()
+        {
+            _tts.AskForGuestsNumber();
+            _asr.AddGuestsNumberGrammar();
         }
 
         protected override void Handle(string txt)
         {
-            if(inputOption == RoomsInputOption.GUESTS)
+            if(InputOption == RoomsInputOption.GUESTS)
             {
                 GuestsNumber = txt;
-                inputOption = RoomsInputOption.CONVENIENCES;
+                if (isChangeMode)
+                {
+                    InputOption = RoomsInputOption.FINISHED;
+                    isChangeMode = false;
+                }
+                else
+                {
+                    InputOption = RoomsInputOption.CONVENIENCES;
+                }
+                _asr.UnloadGuestsNumberGrammar();
             }
-            else if(inputOption == RoomsInputOption.CONVENIENCES)
+            else if(InputOption == RoomsInputOption.CONVENIENCES)
             {
                 if (txt.Equals("Zakończ edycję"))
                 {
-                    inputOption = RoomsInputOption.FINISHED;
+                    InputOption = RoomsInputOption.FINISHED;
+                    _asr.UnloadConveniencesGrammar();
+                    if(isChangeMode)
+                    {
+                        isChangeMode = false;
+                    }
                 }
                 else
                 {
@@ -119,7 +150,25 @@ namespace GUI.ViewModels
                     }
                 }
             }
-            
+            else
+            {
+                string[] words = txt.Split(' ');
+                if (IsChangeRequest(words))
+                {
+                    if (words[1] == "liczbę" && words[2]=="gości")
+                    {
+                        InputOption = RoomsInputOption.GUESTS;
+                        GetGuestsNumber();
+                    }
+                    else
+                    {
+                        InputOption = RoomsInputOption.CONVENIENCES;
+                        GetConveniences();
+                    }
+                    isChangeMode = true;
+                }
+            }
+                      
         }
 
         public override bool CanChangeView()

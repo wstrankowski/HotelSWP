@@ -79,5 +79,10 @@ namespace GUI.ViewModels
         public abstract bool CanChangeView();
         protected abstract void Handle(string txt);
 
+        protected bool IsChangeRequest(string[] words)
+        {
+            return words.Length > 1 && words[0].Equals("zmień");
+        }
+
     }
 }
