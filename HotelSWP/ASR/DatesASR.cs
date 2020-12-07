@@ -13,11 +13,11 @@ namespace HotelSWP.ASR
     {
         private Grammar dataGrammar;
         private Grammar changeDateGrammar;
-        readonly string[] days = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
-        readonly string[] months = new string[] { "stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia" };
-        readonly string[] years = new string[] { "2020", "2021", "2022" };
-        readonly string changeDate = "zmień datę";
-        readonly string[] dateOptions = { "przyjazdu", "wyjazdu" };
+        private readonly string[] days = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
+        private readonly string[] months = new string[] { "stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia" };
+        private readonly string[] years = new string[] { "2020", "2021", "2022" };
+        private readonly string changeDate = "zmień datę";
+        private readonly string[] dateOptions = { "przyjazdu", "wyjazdu" };
 
         public void AddGetDateGrammar()
         {

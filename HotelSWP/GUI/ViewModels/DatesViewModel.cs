@@ -25,16 +25,23 @@ namespace GUI.ViewModels
         private readonly DatesASR _asr;
         private InputOption inputOption = InputOption.ARRIVAL;
         private bool isChangeMode;
-        private readonly DatesModel model = new DatesModel();
+        private readonly DatesModel _model = new DatesModel();
+        public DatesModel Model
+        {
+            get
+            {
+                return _model;
+            }
+        }
         public string ArrivalDay
         {
             get
             {
-                return model.arrivalDay;
+                return _model.arrivalDay;
             }
             set
             {
-                model.arrivalDay = value;
+                _model.arrivalDay = value;
                 OnPropertyRaised("ArrivalDay");
             }
         }
@@ -42,11 +49,11 @@ namespace GUI.ViewModels
         {
             get
             {
-                return model.arrivalMonth;
+                return _model.arrivalMonth;
             }
             set
             {
-                model.arrivalMonth = value;
+                _model.arrivalMonth = value;
                 OnPropertyRaised("ArrivalMonth");
             }
         }
@@ -54,11 +61,11 @@ namespace GUI.ViewModels
         {
             get
             {
-                return model.arrivalYear;
+                return _model.arrivalYear;
             }
             set
             {
-                model.arrivalYear = value;
+                _model.arrivalYear = value;
                 OnPropertyRaised("ArrivalYear");
             }
         }
@@ -66,12 +73,12 @@ namespace GUI.ViewModels
         {
             get
             {
-                return model.departureDay;
+                return _model.departureDay;
             }
 
             set
             {
-                model.departureDay = value;
+                _model.departureDay = value;
                 OnPropertyRaised("DepartureDay");
             }
         }
@@ -79,11 +86,11 @@ namespace GUI.ViewModels
         {
             get
             {
-                return model.departureMonth;
+                return _model.departureMonth;
             }
             set
             {
-                model.departureMonth = value;
+                _model.departureMonth = value;
                 OnPropertyRaised("DepartureMonth");
             }
         }
@@ -91,11 +98,11 @@ namespace GUI.ViewModels
         {
             get
             {
-                return model.departureYear;
+                return _model.departureYear;
             }
             set
             {
-                model.departureYear = value;
+                _model.departureYear = value;
                 OnPropertyRaised("DepartureYear");
             }
         }
@@ -173,7 +180,7 @@ namespace GUI.ViewModels
 
         public override bool CanChangeView()
         {
-            return model.IsCompleted();
+            return _model.IsCompleted();
         }
     }
 }

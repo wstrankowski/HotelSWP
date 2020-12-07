@@ -4,9 +4,67 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GUI.Views"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" FontSize="22"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="Orange">
-            
+    <Grid Background="AliceBlue">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" 
+               HorizontalAlignment="Right" Margin="10,0" 
+               Content="PESEL:"/>
+        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" 
+               VerticalAlignment="Center" HorizontalAlignment="Center"
+               FontSize="25" FontWeight="Bold" Content="PODSUMOWANIE REZERWACJI"/>
+        <Label Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" 
+               HorizontalAlignment="Right" Margin="10,0" 
+               Content="Data wyjazdu:"/>
+        <Label Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" 
+               HorizontalAlignment="Right" Margin="10,0" 
+               Content="Data powrotu:"/>
+        <Label Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" 
+               HorizontalAlignment="Right" Margin="10,0" 
+               Content="Liczba gości:"/>
+        <Label Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" 
+               HorizontalAlignment="Right" Margin="10,0" Grid.RowSpan="2"
+               Content="Udogodnienia:"/>
+        <Label Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" 
+               HorizontalAlignment="Right" Margin="10,0" 
+               Content="Cena:"/>
+
+        <Label Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" 
+               HorizontalAlignment="Left" Margin="10,0" 
+               Content="{Binding Pesel}"/>
+        <Label Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" 
+               HorizontalAlignment="Left" Margin="10,0" 
+               Content="{Binding Reservation.StartDate}" ContentStringFormat="dd MMM yyyy" Language="pl-PL"/>
+        <Label Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" 
+               HorizontalAlignment="Left" Margin="10,0" 
+               Content="{Binding Reservation.EndDate}" ContentStringFormat="dd MMM yyyy" Language="pl-PL"/>
+        <Label Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" 
+               HorizontalAlignment="Left" Margin="10,0" 
+               Content="{Binding Reservation.Room.Number}"/>
+        <TextBlock Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" Grid.RowSpan="2"
+               HorizontalAlignment="Left" Margin="10,0" TextWrapping="WrapWithOverflow"
+               IsEnabled="False" Text="{Binding Reservation.ConveniencesList}"/>
+        <Label Grid.Row="8" Grid.Column="2" VerticalAlignment="Center" 
+               HorizontalAlignment="Left" Margin="10,0"
+               Content="{Binding Reservation.Price}" ContentStringFormat="\{0} zł}"/>
+        
     </Grid>
 </UserControl>

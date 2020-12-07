@@ -1,9 +1,13 @@
-﻿using HotelSWP.ASR;
+﻿using Hotel.DAL;
+using Hotel.Models;
+using HotelSWP.ASR;
 using HotelSWP.GUI.Models;
+using HotelSWP.Helpers;
 using HotelSWP.TTS;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -24,23 +28,30 @@ namespace GUI.ViewModels
 
         private readonly RoomsASR _asr;
         private readonly RoomsTTS _tts;
-        private readonly RoomsModel model = new RoomsModel();
+        private readonly RoomsModel _model = new RoomsModel();
+        public RoomsModel Model
+        {
+            get
+            {
+                return _model;
+            }
+        }
         private bool isChangeMode;
 
         public string GuestsNumber
         {
             get
             {
-                return model.GuestsNumber.ToString();
+                return _model.GuestsNumber.ToString();
             }
             set
             {
-                model.GuestsNumber = int.Parse(value);
+                _model.GuestsNumber = int.Parse(value);
                 OnPropertyRaised(nameof(GuestsNumber));
             }
         }
-        private IEnumerable<string> _notSelectedConveniences;
-        public IEnumerable<string> NotSelectedConveniences
+        private IEnumerable<Convenience> _notSelectedConveniences;
+        public IEnumerable<Convenience> NotSelectedConveniences
         {
             get
             {
@@ -52,15 +63,15 @@ namespace GUI.ViewModels
                 OnPropertyRaised(nameof(NotSelectedConveniences));
             }
         }
-        public IEnumerable<string> SelectedConveniences
+        public IEnumerable<Convenience> SelectedConveniences
         {
             get
             {
-                return model.SelectedConveniences;
+                return _model.SelectedConveniences;
             }
             set
             {
-                model.SelectedConveniences = value;
+                _model.SelectedConveniences = value;
                 OnPropertyRaised(nameof(SelectedConveniences));
             }
         }
@@ -68,8 +79,10 @@ namespace GUI.ViewModels
         {
             _asr = roomsASR;
             _tts = roomsTTS;
-            NotSelectedConveniences = new List<string>(_asr.conveniences);
-            SelectedConveniences = new List<string>();
+            var repository = new Repository();
+            var conveniences = repository.GetConveniences();
+            NotSelectedConveniences = new List<Convenience>(conveniences);
+            SelectedConveniences = new List<Convenience>();
         }
 
         public override void Start()
@@ -128,24 +141,23 @@ namespace GUI.ViewModels
                 else
                 {
                     string[] words = txt.Split(' ');
+                    string convName = words[1];
                     if (words[0] == "Dodaj")
                     {
-                        if (!SelectedConveniences.Contains(words[1]))
+                        var convenience = NotSelectedConveniences.FindConvenienceByName(convName);
+                        if (convenience != null)
                         {
-                            SelectedConveniences = SelectedConveniences.Append(words[1]);
-                            var list = NotSelectedConveniences.ToList();
-                            list.Remove(words[1]);
-                            NotSelectedConveniences = list;
+                            SelectedConveniences = SelectedConveniences.Append(convenience);
+                            NotSelectedConveniences = NotSelectedConveniences.RemoveConvenienceByName(convName);
                         }
                     }
                     else
                     {
-                        if (SelectedConveniences.Contains(words[1]))
+                        var convenience = SelectedConveniences.FindConvenienceByName(convName);
+                        if (convenience != null)
                         {
-                            NotSelectedConveniences = NotSelectedConveniences.Append(words[1]);
-                            var list = SelectedConveniences.ToList();
-                            list.Remove(words[1]);
-                            SelectedConveniences = list;
+                            NotSelectedConveniences = NotSelectedConveniences.Append(convenience);
+                            SelectedConveniences = SelectedConveniences.RemoveConvenienceByName(convName);
                         }
                     }
                 }
@@ -173,7 +185,7 @@ namespace GUI.ViewModels
 
         public override bool CanChangeView()
         {
-            return model.IsCompleted();
+            return _model.IsCompleted();
         }
     }
 }

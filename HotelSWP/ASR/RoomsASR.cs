@@ -1,6 +1,9 @@
-﻿using Microsoft.Speech.Recognition;
+﻿using Hotel.DAL;
+using HotelSWP.Helpers;
+using Microsoft.Speech.Recognition;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +19,6 @@ namespace HotelSWP.ASR
         readonly string[] numbers = new string[] { "1", "2", "3" };
         readonly string convStop = "Zakończ edycję";
         readonly string[] convOption = new string[] { "Dodaj", "Usuń" };
-        public readonly string[] conveniences = new string[] { "Telewizor", "Internet", "Żelazko", "Czajnik", "Suszarka do włosów", "SPA", "Śniadanie" };
         readonly string change = "zmień";
         readonly string[] changeOptions = new string[] { "liczbę gości", "udogodnienia" };
 
@@ -33,7 +35,6 @@ namespace HotelSWP.ASR
             catch (Exception e)
             {
                 Console.WriteLine(e);
-
             }
         }
 
@@ -41,7 +42,10 @@ namespace HotelSWP.ASR
         {
             try
             {
-                Choices conveniencesChoices = GetChoices(conveniences);
+                Repository repository = new Repository();
+                var conv = repository.GetConveniences();
+                var conveniences = conv.GetNames();
+                Choices conveniencesChoices = GetChoices(conveniences.ToArray());
                 Choices convOptionChoices = GetChoices(convOption);
                 GrammarBuilder grammarBuilder = new GrammarBuilder();
                 grammarBuilder.Append(convOptionChoices);

@@ -12,7 +12,7 @@ namespace HotelSWP.TTS
     {
         public void AskForGuestsNumber()
         {
-            ss.SpeakAsync("Proszę podać liczbę gości.");
+            SpeakAsync("Proszę podać liczbę gości.");
         }
 
         public void AskForConveniences()
@@ -24,7 +24,7 @@ namespace HotelSWP.TTS
             sb.Append("\"Usuń internet\". Aby zakończyć edycję proszę powiedzieć ");
             sb.Append("\"Zakończ edycję\" ");
             string text = sb.ToString();
-            ss.SpeakAsync(text);
+            SpeakAsync(text);
         }
 
         public override void Help()
@@ -50,7 +50,7 @@ namespace HotelSWP.TTS
             sb.Append("aby zmienić liczbę gości powiedz \"zmień liczbę gości\", ");
             sb.Append("aby zmienić udogodnienia powiedz \"zmień udogodnienia\".");
             string text = sb.ToString();
-            ss.SpeakAsync(text);
+            SpeakAsync(text);
         }
     }
 }

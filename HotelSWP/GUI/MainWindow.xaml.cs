@@ -1,8 +1,12 @@
 ﻿using GUI.ViewModels;
+using Hotel.DAL;
+using Hotel.Models;
 using HotelSWP.ASR;
+using HotelSWP.Helpers;
 using HotelSWP.TTS;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,6 +29,8 @@ namespace GUI
     public partial class MainWindow : Window
     {
         private LinkedList<BaseViewModel> _viewModels;
+        private DatesViewModel _dvm;
+        private RoomsViewModel _rvm;
         private Thread viewModelThread;
         public MainWindow()
         {
@@ -37,11 +43,11 @@ namespace GUI
         private void InitializeViewModels()
         {
             _viewModels = new LinkedList<BaseViewModel>();
-            var dvm = new DatesViewModel(new DatesTTS(), new DatesASR(), this);
-            var rvm = new RoomsViewModel(new RoomsTTS(), new RoomsASR(), this);
-            var fvm = new FinalViewModel(new FinalTTS(), new BaseASR(), this);
-            _viewModels.AddLast(dvm);
-            _viewModels.AddLast(rvm);
+            _dvm = new DatesViewModel(new DatesTTS(), new DatesASR(), this);
+            _rvm = new RoomsViewModel(new RoomsTTS(), new RoomsASR(), this);
+            var fvm = new FinalViewModel(new FinalTTS(), new FinalASR(), this);
+            _viewModels.AddLast(_dvm);
+            _viewModels.AddLast(_rvm);
             _viewModels.AddLast(fvm);
         }
 
@@ -81,6 +87,11 @@ namespace GUI
             });            
         }
 
+        internal void Finish()
+        {
+            Dispatcher.InvokeShutdown();
+        }
+
         private void SwitchView(BaseViewModel viewModel)
         {
             var currentViewModel = GetCurrentNode().Value;
@@ -110,6 +121,24 @@ namespace GUI
         private LinkedListNode<BaseViewModel> GetCurrentNode()
         {
             return _viewModels.Find((BaseViewModel)DataContext);
+        }
+
+        public Reservation GetReservation()
+        {
+            Repository repository = new Repository();
+            var rooms = repository.GetRooms();
+            var roomType = _rvm.Model.GetRoomType();
+            var room = rooms.GetRoomByType(roomType);
+            var startDate = _dvm.Model.GetStartDate();
+            var endDate = _dvm.Model.GetEndDate();
+            var reservation = new Reservation(startDate, endDate, room);
+
+            foreach(var convenience in _rvm.Model.SelectedConveniences)
+            {
+                reservation.AddConvenenienceToReservation(convenience);
+            }
+
+            return reservation;
         }
     }
 }

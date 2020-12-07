@@ -15,7 +15,7 @@ namespace GUI.ViewModels
     {
         private readonly BaseTTS _baseTTS;
         private readonly BaseASR _baseASR;
-        private readonly MainWindow _mainWindow;
+        protected readonly MainWindow _mainWindow;
 
         public BaseViewModel(BaseTTS baseTTS, BaseASR baseASR, MainWindow mainWindow)
         {

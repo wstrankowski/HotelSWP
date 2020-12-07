@@ -39,13 +39,11 @@ namespace HotelSWP.ASR
         public void StartRecognizing()
         {
             _sre.RecognizeAsync(RecognizeMode.Multiple);
-            Console.WriteLine("START " + GetType() + " " + _sre.AudioState);
 
         }
         public void StopRecognizing()
         {
             _sre.RecognizeAsyncCancel();
-            Console.WriteLine("STOP " + GetType() + " " + _sre.AudioState);
         }
     }
 }

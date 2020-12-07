@@ -9,7 +9,7 @@ namespace HotelSWP.TTS
 {
     public abstract class BaseTTS
     {
-        protected readonly SpeechSynthesizer ss;
+        private readonly SpeechSynthesizer ss;
 
         public BaseTTS()
         {
@@ -19,7 +19,7 @@ namespace HotelSWP.TTS
 
         public void PleaseRepeat()
         {
-            ss.Speak("Proszę powtórzyć");
+            SpeakAsync("Proszę powtórzyć");
         }
 
         public abstract void Help();
@@ -29,9 +29,22 @@ namespace HotelSWP.TTS
             ss.SpeakAsyncCancelAll();
         }
 
+        protected void SpeakAsync(string txt)
+        {
+            StopSpeakig();
+            ss.SpeakAsync(txt);
+        }
+
+        protected void Speak(string text)
+        {
+            StopSpeakig();
+            ss.Speak(text);
+        }
         internal void CantChangeView()
         {
-            ss.SpeakAsync("Nie można zmienić widoku przed uzupełnieniem wszystkich pól");
+            SpeakAsync("Nie można zmienić widoku przed uzupełnieniem wszystkich pól");
         }
+
+        
     }
 }
